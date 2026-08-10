@@ -1,625 +1,1714 @@
-# %%
-from pathlib import Path
-import re
-
-import pandas as pd
-
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DATA_DIR = PROJECT_ROOT / "materials/Pandas_100_knocks/input"
-OUTPUT_DIR = PROJECT_ROOT / "outputs"
-
-
-def initialize1():
-    return pd.read_csv(DATA_DIR / "titanic3.csv")
-
-
-def initialize2():
-    return pd.read_csv(DATA_DIR / "data1.csv")
-
-
-df3 = pd.read_csv(DATA_DIR / "data1_2.csv")
-df4 = pd.read_csv(DATA_DIR / "data1_3.csv")
-
-# %%
-# 1
-df = initialize1()
-df.head()
-
-# %%
-# 2
-df = initialize1()
-df.tail()
-
-# %%
-# 3
-df = initialize1()
-df.shape
-
-# %%
-# 4
-df2 = initialize2()
-df2.head()
-
-# %%
-# 5
-df = initialize1()
-df.sort_values('fare')
-
-# %%
-# 6
-df = initialize1()
-df_copy = df.copy()
-df_copy.head()
-
-# %%
-# 7
-df = initialize1()
-print(df.dtypes)
-print(df['cabin'].dtype)
-
-# %%
-# 8
-df = initialize1()
-print(df['pclass'].dtype)
-df['pclass'] = df['pclass'].astype(str)
-print(df['pclass'].dtype)
-
-# %%
-# 9
-df = initialize1()
-len(df)
-
-# %%
-# 10
-df = initialize1()
-df.info()
-
-# %%
-# 11
-df = initialize1()
-print(df['sex'].unique())
-print(df['cabin'].unique())
-
-# %%
-# 12
-df = initialize1()
-df.columns.tolist()
-
-# %%
-# 13
-df = initialize1()
-df.index.values
-
-# %%
-# 14
-df = initialize1()
-df['name']
-
-# %%
-# 15
-df = initialize1()
-df[['name','sex']]
-
-# %%
-# 16
-df = initialize1()
-df[:4]
-
-# %%
-# 17
-df = initialize1()
-df[3:10]
-
-# %%
-# 18
-df = initialize1()
-df.loc[:,:]
-
-# %%
-# 19
-df = initialize1()
-df.loc[:,'fare']
-
-# %%
-# 20
-df = initialize1()
-df.loc[:10,'fare']
-
-# %%
-# 21
-df = initialize1()
-df.loc[:,['name','ticket']]
-
-# %%
-# 22
-df = initialize1()
-df.loc[:,'name':'cabin']
-
-# %%
-# 23
-df = initialize1()
-df.iloc[:5,4]
-
-# %%
-# 24
-df = initialize1()
-df_copy = df[["name", "age", "sex"]]
-df_copy.to_csv(OUTPUT_DIR / "sample.csv", index=False)
-
-# %%
-# 25
-df = initialize1()
-df[df['age'] >= 30]
-
-# %%
-# 26
-df = initialize1()
-df[df['sex'] == 'female']
-
-# %%
-# 27
-df = initialize1()
-df[(df['sex'] == 'female' ) & (df['age'] >= 40)]
-
-# %%
-# 28
-df = initialize1()
-df.query('sex == "female" & age >= 40 ')
-
-# %%
-# 29
-df = initialize1()
-df[df["name"].str.contains("Mrs", na=False, regex=False)]
-
-# %%
-# 30
-df = initialize1()
-df.select_dtypes(include=["object", "string"])
-
-# %%
-# 31
-df = initialize1()
-df.nunique()
-
-# %%
-# 32
-df = initialize1()
-df['embarked'].value_counts()
-
-# %%
-# 33
-df = initialize1()
-df.loc[3,'age'] = 40
-df.head()
-
-# %%
-# 34
-df = initialize1()
-df["sex"] = df["sex"].map({"male": 0, "female": 1})
-df.head()
-
-# %%
-# 35
-df = initialize1()
-df['fare'] = df['fare'] + 100
-df.head()
-
-# %%
-# 36
-df = initialize1()
-df['fare'] = df['fare'] * 2
-df.head()
-
-# %%
-# 37
-df = initialize1()
-df['fare'] = df['fare'].round()
-df.head()
-
-# %%
-# 38
-df = initialize1()
-df['test'] = 1
-df.head()
-
-# %%
-# 39
-df = initialize1()
-df['test'] = df['cabin'].str.cat(df['embarked'],sep='_')
-df.head()
-
-# %%
-# 40
-df = initialize1()
-df["test"] = df["age"].astype(str) + "_" + df["embarked"]
-df.head()
-
-# %%
-# 41
-df = initialize1()
-df = df.drop('body',axis=1)
-df.head()
-
-# %%
-# 42
-df = initialize1()
-df = df.drop(3,axis=0)
-df.head()
-
-# %%
-# 43
-df2 = initialize2()
-df2.columns = ['name', 'class', 'Biology', 'Physics', 'Chemistry']
-df2.head()
-
-# %%
-# 44
-df2 = initialize2()
-df2 = df2.rename(columns={'English' : 'Biology'})
-df2.head()
-
-# %%
-# 45
-df2 = initialize2()
-df2 = df2.rename(index={1 : 10})
-df2.head()
-
-# %%
-# 46
-df = initialize1()
-df.isna().sum()
-
-# %%
-# 47
-df = initialize1()
-df["age"] = df["age"].fillna(30)
-df["age"].isna().sum()
-
-# %%
-# 48
-df = initialize1()
-df = df.dropna()
-df.isna().sum()
-
-# %%
-# 49
-df = initialize1()
-df["survived"].to_numpy()
-
-# %%
-# 50
-df = initialize1()
-df.sample(frac=1)
-
-# %%
-# 51
-df = initialize1()
-df.sample(frac=1).reset_index(drop=True)
-
-# %%
-# 52
-df2 = initialize2()
-print(df2.duplicated().sum())
-df2 = df2.drop_duplicates()
-df2
-
-# %%
-# 53
-df = initialize1()
-df['name'].str.upper()
-
-# %%
-# 54
-df = initialize1()
-df['name'].str.lower()
-
-# %%
-# 55
-df = initialize1()
-df['sex'] = df['sex'].replace('female','Python')
-df.head()
-
-# %%
-# 56
-df = initialize1()
-df.loc[0, "name"] = re.sub("Elisabeth", "", df.loc[0, "name"])
-df.loc[0, "name"]
-
-# %%
-# 57
-df5 = pd.read_csv(DATA_DIR / "data2.csv", encoding="cp932")
-df5["test2"] = df5["都道府県"].str.strip() + "_" + df5["市区町村"].str.strip()
-df5.head()
-
-# %%
-# 58
-df2 = initialize2()
-df2 = df2.transpose()
-df2
-
-# %%
-# 59
-df2 = initialize2()
-df2 = pd.merge(df2,df3,on='name',how='left')
-df2
-
-# %%
-# 60
-df2 = initialize2()
-df2 = pd.merge(df2,df3,on='name',how='right')
-df2
-
-# %%
-# 61
-df2 = initialize2()
-df2 = pd.merge(df2,df3,on='name',how='inner')
-df2
-
-# %%
-# 62
-df2 = initialize2()
-df2 = pd.merge(df2,df3,on='name',how='outer')
-df2
-
-# %%
-# 63
-df2 = initialize2()
-df2 = pd.concat([df2,df4],axis=1)
-df2
-
-# %%
-# 64
-df2 = initialize2()
-df2 = pd.concat([df2,df4],axis=1)
-df2 = df2.loc[:,~df2.columns.duplicated()]
-df2
-
-# %%
-# 65
-df2 = initialize2()
-df2 = pd.concat([df2,df4],axis=0)
-df2
-
-# %%
-# 66
-df = initialize1()
-df['age'].mean()
-
-# %%
-# 67
-df = initialize1()
-df['age'].median()
-
-# %%
-# 68
-df2 = initialize2()
-subjects = ["English", "Mathematics", "History"]
-print(df2[subjects].sum(axis=1))
-print(df2[subjects].sum(axis=0))
-
-# %%
-# 69
-df2 = initialize2()
-df2['English'].max()
-
-# %%
-# 70
-df2 = initialize2()
-df2['English'].min()
-
-# %%
-# 71
-df2 = initialize2()
-scores = df2.drop(columns="name")
-print(scores.groupby("class").max())
-print(scores.groupby("class").min())
-print(scores.groupby("class").mean())
-
-# %%
-# 72
-df = initialize1()
-df.describe()
-
-# %%
-# 73
-df = initialize1()
-df.corr(numeric_only=True)
-
-# %%
-# 74
-df2 = initialize2()
-from sklearn.preprocessing import StandardScaler
-
-scores = df2[["English", "Mathematics", "History"]]
-scaler = StandardScaler()
-df2_std = pd.DataFrame(
-    scaler.fit_transform(scores),
-    columns=scores.columns,
-    index=scores.index,
-)
-df2_std.describe()
-
-# %%
-# 75
-df2 = initialize2()
-from sklearn.preprocessing import StandardScaler
-
-english = df2[["English"]]
-scaler = StandardScaler()
-df2_std = pd.DataFrame(
-    scaler.fit_transform(english),
-    columns=english.columns,
-    index=english.index,
-)
-df2_std.describe()
-
-# %%
-# 76
-df2 = initialize2()
-from sklearn.preprocessing import MinMaxScaler
-
-scores = df2[["English", "Mathematics", "History"]]
-scaler = MinMaxScaler()
-df2_minmax = pd.DataFrame(
-    scaler.fit_transform(scores),
-    columns=scores.columns,
-    index=scores.index,
-)
-df2_minmax.describe()
-
-# %%
-# 77
-df = initialize1()
-print(df['fare'].idxmax())
-print(df['fare'].idxmin())
-
-# %%
-# 78
-df = initialize1()
-print(df['fare'].quantile([0, 0.25, 0.5, 0.75, 1.0]))
-
-# %%
-# 79
-df = initialize1()
-print(df['age'].mode())
-print(df['age'].value_counts())
-
-# %%
-# 80
-df = initialize1()
-from sklearn.preprocessing import LabelEncoder
-
-encoder = LabelEncoder()
-df["sex"] = encoder.fit_transform(df["sex"])
-df.head()
-
-# %%
-# 81
-df = initialize1()
-df = pd.get_dummies(df, columns=["sex"], dtype=int)
-df.head()
-
-# %%
-# 82
-df = initialize1()
-df.hist(figsize=(20, 20), color="b")
-
-# %%
-# 83
-df = initialize1()
-df['age'].plot(kind='hist')
-
-# %%
-# 84
-df2 = initialize2()
-df2['sum'] = df2.iloc[:,2:5].sum(axis=1)
-df2[['name','sum']].plot(kind='bar',x=df2.columns[0])
-
-# %%
-# 85
-df2 = initialize2()
-df2[['name','English','Mathematics','History']].plot(kind='bar',figsize=(10,4),x=df2.columns[0])
-
-# %%
-# 86
-df2 = initialize2()
-df2[['name','English','Mathematics','History']].plot(kind='bar',figsize=(10,4),
-                                                    x=df2.columns[0],stacked=True)
-
-# %%
-# 87
-df = initialize1()
-from pandas.plotting import scatter_matrix
-
-scatter_matrix(df, figsize=(20, 20))
-
-# %%
-# 88
-df = initialize1()
-df.plot(kind='scatter',x='age',y='fare',figsize=(8,6))
-
-# %%
-# 89
-df = initialize1()
-df.plot(kind='scatter',x='age',y='fare',figsize=(8,6),title='age-fare scatter')
-
-# %%
-# 90
-from sklearn.preprocessing import LabelEncoder
-
-df = initialize1()
-df_copy = df.copy()
-encoder = LabelEncoder()
-df_copy["sex"] = encoder.fit_transform(df_copy["sex"])
-df_copy["embarked"] = encoder.fit_transform(df_copy["embarked"].astype(str))
-df_copy.head()
-
-# %%
-# 91
-df_copy.isna().sum()
-
-# %%
-# 92
-df_copy["age"] = df_copy["age"].fillna(df_copy["age"].mean())
-df_copy["fare"] = df_copy["fare"].fillna(df_copy["fare"].mean())
-df_copy.isna().sum()
-
-# %%
-# 93
-df_copy = df_copy.drop(
-    columns=["name", "ticket", "cabin", "boat", "body", "home.dest"]
-)
-df_copy
-
-# %%
-# 94
-feature_names = ["pclass", "age", "sex", "fare", "embarked"]
-features = df_copy[feature_names].to_numpy()
-target = df_copy["survived"].to_numpy()
-
-# %%
-# 95
-from sklearn.model_selection import train_test_split
-
-X_train, X_test, y_train, y_test = train_test_split(
-    features,
-    target,
-    test_size=0.3,
-    random_state=0,
-)
-
-# %%
-# 96
-from sklearn.ensemble import RandomForestClassifier
-
-model = RandomForestClassifier(n_estimators=100, random_state=0)
-model.fit(X_train, y_train)
-
-# %%
-# 97
-pred = model.predict(X_test)
-pred
-
-# %%
-# 98
-from sklearn.metrics import accuracy_score
-
-accuracy_score(y_test, pred)
-
-# %%
-# 99
-importance = pd.Series(
-    model.feature_importances_,
-    index=feature_names,
-    name="importance",
-)
-importance.sort_values(ascending=False)
-
-# %%
-# 100
-OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-pd.DataFrame(pred).to_csv(
-    OUTPUT_DIR / "submission.csv",
-    header=False,
-    index=False,
-)
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# 初学者向けPandas100本ノックver1.0.7\n",
+    "##### Shift + Enter で各セルのコードが実行されます\n",
+    "・print(ans[ 問題番号 ]) で回答コード例を表示  \n",
+    "・Python3エンジニア認定データ分析試験にも沿った問題内容   \n",
+    "・Pandasの各メソッドの説明は以下のサイトが分かりやすいです  \n",
+    " 　[note.nkmk.me](https://note.nkmk.me/pandas/)  \n",
+    "・\"Data for Titanic passengers\" from [VANDERBILT UNIVERSITY](https://biostat.app.vumc.org/wiki/Main/DataSets)  \n",
+    "  \n",
+    "**本コンテンツ作成時のpandasのバージョンは1.1.0**\n",
+    "  \n",
+    "作成日:2020年9月24日  \n",
+    "最終更新日:2023年1月16日  \n",
+    "再配布・改編不可  \n",
+    "作成者：[kunishou](https://qiita.com/kunishou)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[answer0]\n",
+      "\n",
+      "このように回答コード例がここに表示されます。\n",
+      "各問題の回答コード例を表示するときはprintの前の\n",
+      "#を消して実行して下さい。\n",
+      "\n",
+      "コード例をセル内にコピー&ペーストし\n",
+      "実行すると、正解のデータが表示されます\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Shift + Enterで題材データ、回答コードを読み込んで下さい\n",
+    "\n",
+    "import pandas as pd\n",
+    "import glob\n",
+    "\n",
+    "#題材データをdfに読み込み(タイタニック号の乗客データ、テストの点数データ 等)\n",
+    "def initialize1():\n",
+    "    df = pd.read_csv('../input/titanic3.csv')\n",
+    "    return df\n",
+    "\n",
+    "def initialize2():\n",
+    "    df = pd.read_csv('../input/data1.csv')\n",
+    "    return df\n",
+    "\n",
+    "df = initialize1()\n",
+    "df2 = initialize2()\n",
+    "df3 = pd.read_csv('../input/data1_2.csv')\n",
+    "df4 = pd.read_csv('../input/data1_3.csv')\n",
+    "df5 = pd.read_csv('../input/data2.csv',encoding='cp932')\n",
+    "\n",
+    "#回答コードをansリストに格納\n",
+    "path = sorted(glob.glob('../input/a_' + '*.txt'))\n",
+    "\n",
+    "ans = []\n",
+    "\n",
+    "for _ in range(len(path)):\n",
+    "    with open(path[_], 'r',encoding='utf-8') as f:\n",
+    "        ans.append(f.read())\n",
+    "        \n",
+    "print(ans[0])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Pandas基礎 (1 - 13)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【1】\n",
+    "# dfに読み込んだデータの最初の5行を表示\n",
+    "#print(ans[1]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【2】\n",
+    "# dfに読み込んだデータの最後の5行を表示\n",
+    "#print(ans[2]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【3】\n",
+    "# dfのDataFrameサイズを確認\n",
+    "#print(ans[3]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【4】\n",
+    "# inputフォルダ内のdata1.csvファイルを\n",
+    "# 読み込みdf2に格納して、最初の5行を表示\n",
+    "#print(ans[4]) #回答表示\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【5】\n",
+    "# dfのfareの列で昇順に並び替えて表示\n",
+    "#print(ans[5]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【6】\n",
+    "# df_copyにdfをコピーして、最初の5行を表示\n",
+    "#print(ans[6]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【7】\n",
+    "# ① dfの各列のデータ型を確認\n",
+    "# ② dfのcabinの列のデータ型を確認\n",
+    "#print(ans[7]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【8】\n",
+    "# ① dfのpclassの列のデータ型をdtypeで確認\n",
+    "# ② 数値型から文字型に変換し、データ型をdtypeで確認\n",
+    "#print(ans[8]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【9】\n",
+    "# dfのレコード数(行数)を確認\n",
+    "#print(ans[9]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【10】\n",
+    "# dfのレコード数(行数)、各列のデータ型、欠損値の有無を確認\n",
+    "#print(ans[10]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【11】\n",
+    "# dfのsex,cabinの列の要素を確認\n",
+    "#print(ans[11]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【12】\n",
+    "# dfの列名一覧をlist形式で表示\n",
+    "#print(ans[12]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【13】\n",
+    "# dfのインデックス一覧をndaaray形式で表示\n",
+    "#print(ans[13]) #回答表示\n",
+    "df = initialize1() #初期化#\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# データ抽出 (14 - 32)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【14】\n",
+    "# dfのnameの列のみ表示\n",
+    "#print(ans[14]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【15】\n",
+    "# dfのnameとsexの列のみ表示\n",
+    "#print(ans[15]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【16】\n",
+    "# dfのindex(行)の4行目までを表示\n",
+    "#print(ans[16]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【17】\n",
+    "# dfのindex(行)の4行目から10行目までを表示\n",
+    "#print(ans[17]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【18】\n",
+    "# locを使ってdf全体を表示\n",
+    "#print(ans[18]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【19】\n",
+    "# locを使ってdfのfare列をすべて表示\n",
+    "#print(ans[19]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【20】\n",
+    "# locを使ってdfのfare列の10のラベルまで表示\n",
+    "#print(ans[20]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# 【21】\n",
+    "# locを使ってdfのnameとticketの列をすべて表示\n",
+    "#print(ans[21]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【22】\n",
+    "# locを使ってdfのnameからcabinまでの列をすべて表示\n",
+    "#print(ans[22]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【23】\n",
+    "# ilocを使ってdfのage列を5行目まで表示\n",
+    "#print(ans[23]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【24】\n",
+    "# dfのname,age,sexの列のみ抽出しdf_copyに格納\n",
+    "# その後outputフォルダにcsvファイルで出力\n",
+    "# 出力ファイル名はsample.csv\n",
+    "#print(ans[24]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【25】\n",
+    "# dfのage列の値が30以上のデータのみ抽出\n",
+    "#print(ans[25]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【26】\n",
+    "# dfのsex列がfemaleのデータのみ抽出\n",
+    "#print(ans[26]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【27】\n",
+    "# dfのsex列がfemaleでかつageが40以上のデータのみ抽出\n",
+    "#print(ans[27]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【28】\n",
+    "# queryを用いてdfのsex列がfemaleでかつageが40以上のデータのみ抽出\n",
+    "#print(ans[28]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【29】\n",
+    "# dfのname列に文字列「Mrs」が含まれるデータを表示\n",
+    "#print(ans[29]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【30】\n",
+    "# dfの中で文字列型の列のみを表示\n",
+    "#print(ans[30]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【31】\n",
+    "# dfの各列の要素数の確認\n",
+    "#print(ans[31]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【32】\n",
+    "# dfのembarked列の要素と出現回数の確認\n",
+    "#print(ans[32]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# データ加工 (33 - 58)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【33】\n",
+    "# dfのindex名が「3」のage列を\n",
+    "# 30から40に変更し、先頭の5行を表示\n",
+    "#print(ans[33]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【34】\n",
+    "# dfのsex列にてmale→0、femlae→1に\n",
+    "# 変更し、先頭の5行を表示\n",
+    "#print(ans[34]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# 【35】\n",
+    "# dfのfare列に100を足して、\n",
+    "# 先頭の5行を表示\n",
+    "#print(ans[35]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【36】\n",
+    "# dfのfare列に2を掛けて、\n",
+    "# 先頭の5行を表示\n",
+    "#print(ans[36]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【37】\n",
+    "# dfのfare列を小数点以下で丸めて、先頭の5行を表示\n",
+    "#print(ans[37]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【38】\n",
+    "# dfに列名「test」で値がすべて1の\n",
+    "# カラムを追加し、先頭の5行を表示\n",
+    "#print(ans[38]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【39】\n",
+    "# dfにcabinとembarkedの列を「_」で\n",
+    "# 結合した列を追加(列名は「test」)し、\n",
+    "# 先頭の5行を表示\n",
+    "#print(ans[39]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【40】\n",
+    "# dfにageとembarkedの列を「_」で\n",
+    "# 結合した列を追加(列名は「test」)し、\n",
+    "# 先頭の5行を表示\n",
+    "#print(ans[40]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【41】\n",
+    "# dfからbodyの列を削除し、最初の5行を表示\n",
+    "#print(ans[41]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【42】\n",
+    "# dfからインデックス名「3」の行を削除し、最初の5行を表示\n",
+    "#print(ans[42]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【43】\n",
+    "# df2の列名を'name', 'class', 'Biology', 'Physics', 'Chemistry'に変更\n",
+    "# df2の最初の5行を表示\n",
+    "#print(ans[43]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【44】\n",
+    "# df2の列名を'English'をBiology'に変更\n",
+    "# df2の最初の5行を表示\n",
+    "#print(ans[44]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【45】\n",
+    "# df2のインデックス名「1」を「10」に変更\n",
+    "# df2の最初の5行を表示\n",
+    "#print(ans[45]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【46】\n",
+    "# dfのすべての列の欠損値数を確認\n",
+    "#print(ans[46]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【47】\n",
+    "# dfのage列の欠損値に30を代入\n",
+    "# その後、ageの欠損値数を確認\n",
+    "#print(ans[47]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【48】\n",
+    "# dfでひとつでも欠損値がある行を削除\n",
+    "# その後、dfの欠損値数を確認\n",
+    "#print(ans[48]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【49】\n",
+    "# dfのsurvivedの列をndarray形式(配列)で表示\n",
+    "#print(ans[49]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【50】\n",
+    "# dfの行をシャッフルして表示\n",
+    "#print(ans[50]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【51】\n",
+    "# dfの行をシャッフルし、インデックスを振り直して表示\n",
+    "#print(ans[51]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【52】\n",
+    "# ①df2の重複行数をカウント\n",
+    "# ②df2の重複行を削除し、df2を表示\n",
+    "#print(ans[52]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【53】\n",
+    "# dfのnameの列をすべて大文字に変換し表示\n",
+    "#print(ans[53]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【54】\n",
+    "# dfのnameの列をすべて小文字に変換し表示\n",
+    "#print(ans[54]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【55】\n",
+    "# dfのsex列に含まれる「female」という単語を\n",
+    "# 「Python」に置換。その後、1行目の\n",
+    "# 「female」が「Python」に置き換わったことを確認\n",
+    "#print(ans[55]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【56】\n",
+    "# dfのname列1行目の「Allen, Miss. Elisabeth Walton」の\n",
+    "# 「Elisabeth」を消去(import reをインポート)\n",
+    "#print(ans[56]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【57】\n",
+    "# df5の都道府県列と市区町村列を空白がないように\n",
+    "# 「_」で結合(新規列名は「test2」)し、先頭5行を表示\n",
+    "# ※df5の「test」列は通常通り結合した場合の結果\n",
+    "#print(ans[57]) #回答表示\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【58】\n",
+    "# df2の行と列を入れ替えて表示\n",
+    "#print(ans[58]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# マージと連結(59 - 65)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【59】\n",
+    "# df2にdf3を左結合（結合キーはname）し、df2に格納\n",
+    "#print(ans[59]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【60】\n",
+    "# df2にdf3を右結合（結合キーはname）し、df2に格納\n",
+    "#print(ans[60]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【61】\n",
+    "# df2にdf3を内部結合（結合キーはname）し、df2に格納\n",
+    "#print(ans[61]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【62】\n",
+    "# df2にdf3を外部結合し、df2に格納\n",
+    "#print(ans[62]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【63】\n",
+    "# df2とdf4を列方向に連結し、df2に格納\n",
+    "#print(ans[63]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【64】\n",
+    "# df2とdf4を列方向に連結後、重複している\n",
+    "# name列の片方を削除し、df2に格納\n",
+    "#print(ans[64]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【65】\n",
+    "# df2とdf4を行方向に連結し、df2に格納\n",
+    "#print(ans[65]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# 統計 (66 - 79)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【66】\n",
+    "# dfのage列の平均値を確認\n",
+    "#print(ans[66]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【67】\n",
+    "# dfのage列の中央値を確認\n",
+    "#print(ans[67]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【68】\n",
+    "# ①df2の生徒ごとの合計点（行方向の合計）\n",
+    "# ②df2の科目ごとの点数の総和（列方向の合計）\n",
+    "#print(ans[68]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【69】\n",
+    "# df2のEnglishで得点の最大値\n",
+    "#print(ans[69]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【70】\n",
+    "# df2のEnglishで得点の最小値\n",
+    "#print(ans[70]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【71】\n",
+    "# df2においてclassでグルーピングし、クラスごとの科目の\n",
+    "# 最大値、最小値、平均値を求める(name列は削除しておく)\n",
+    "#print(ans[71]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【72】\n",
+    "# dfの基本統計量を確認(describe)\n",
+    "#print(ans[72]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【73】\n",
+    "# dfの各列間の(Pearson)相関係数を確認\n",
+    "#print(ans[73]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【74】\n",
+    "# scikit-learnを用いてdf2のEnglish、Mathematics、History列を標準化する\n",
+    "# (from sklearn.preprocessing import StandardScalerをインポート)\n",
+    "#print(ans[74]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【75】\n",
+    "# scikit-learnを用いてdf2のEnglish列を標準化する\n",
+    "# (from sklearn.preprocessing import StandardScalerをインポート)\n",
+    "#print(ans[75]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【76】\n",
+    "# scikit-learnを用いてdf2のEnglish、Mathematics、History列を\n",
+    "# Min-Maxスケーリングする\n",
+    "# (from sklearn.preprocessing import MinMaxScalerをインポート)\n",
+    "#print(ans[76]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【77】\n",
+    "# dfのfare列の最大値、最小値の行名を取得\n",
+    "#print(ans[77]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【78】\n",
+    "# dfのfare列の0、25、50、75、100パーセンタイルを取得\n",
+    "#print(ans[78]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【79】\n",
+    "# ①dfのage列の最頻値を取得\n",
+    "# ②value_counts()にてage列の要素数を\n",
+    "# 確認し、①の結果の妥当性を確認\n",
+    "#print(ans[79]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# ラベリング (80 - 81)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【80】\n",
+    "# dfのsex列をラベルエンコーディングし、\n",
+    "# dfの先頭5行を表示\n",
+    "# (from sklearn.preprocessing import LabelEncoderをインポート)\n",
+    "#print(ans[80]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【81】\n",
+    "# dfのsex列をOne-hotエンコーディングし、\n",
+    "# dfの先頭5行を表示\n",
+    "#print(ans[81]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Pandasプロット (82 - 89)\n",
+    "Pandasプロットの機能については以下のサイトの説明が分かりやすいです  \n",
+    "[自調自考の旅](https://own-search-and-study.xyz/2016/08/03/pandas%E3%81%AEplot%E3%81%AE%E5%85%A8%E5%BC%95%E6%95%B0%E3%82%92%E4%BD%BF%E3%81%84%E3%81%93%E3%81%AA%E3%81%99/)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【82】\n",
+    "# dfのすべての数値列のヒストグラムを表示\n",
+    "#print(ans[82]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【83】\n",
+    "# dfのage列をヒストグラムで表示\n",
+    "#print(ans[83]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【84】\n",
+    "# df2のname列の要素ごとの3科目合計得点を棒グラフで表示\n",
+    "#print(ans[84]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【85】\n",
+    "# df2のname列の要素ごとの3科目を棒グラフで\n",
+    "# 並べて表示\n",
+    "#print(ans[85]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【86】\n",
+    "# df2のname列の要素ごとの3科目を積み上げ棒グラフで表示\n",
+    "#print(ans[86]) #回答表示\n",
+    "df2 = initialize2() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【87】\n",
+    "# dfの各列間の散布図を表示\n",
+    "# (from pandas.plotting import scatter_matrixをインポート)\n",
+    "#print(ans[87]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【88】\n",
+    "# dfのage列とfare列で散布図を作成\n",
+    "#print(ans[88]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【89】\n",
+    "# 【88】で描画したグラフに「age-fare scatter」という\n",
+    "# グラフタイトルをつける\n",
+    "#print(ans[89]) #回答表示\n",
+    "df = initialize1() #初期化\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# タイタニック号の生存者予測 (90 - 100)  \n",
+    "これまで触れてきたタイタニック号の乗客データを使用して、乗客の生存有無を  \n",
+    "予測してみます。  \n",
+    "  \n",
+    "※90～100については順番通りにやらないと上手く動作しません"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【90】ラベルエンコーディング\n",
+    "# df_copyのsexとembarked列をラベルエンコーディング\n",
+    "# (from sklearn.preprocessing import LabelEncoderをインポート)\n",
+    "# (df_copyはdfをコピーしたもの)\n",
+    "#print(ans[90]) #回答表示\n",
+    "df_copy =df.copy()\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【91】欠損値確認\n",
+    "# df_copyの欠損値を確認\n",
+    "#print(ans[91]) #回答表示\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【92】欠損値補完\n",
+    "# df_copyのage、fare列の欠損値を各列の平均値で補完\n",
+    "#print(ans[92]) #回答表示\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【93】不要列の削除\n",
+    "# df_copyの中で機械学習で使用しない不要な行を削除\n",
+    "# (name, ticket, cabin, boat, body, home.destを削除)\n",
+    "#print(ans[93]) #回答表示\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【94】ndarray形式への変換\n",
+    "# ①df_copyのpclass、age、sex、fare、embarkedの列を抽出し、ndarray形式に変換\n",
+    "# ②df_copyのsurvivedの列を抽出し、ndarray形式に変換\n",
+    "# (①をfeatures、②をtargetという変数にそれぞれ格納)\n",
+    "#print(ans[94]) #回答表示\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【95】学習データとテストデータに分割\n",
+    "# 【94】で作成したfeatrues、targetを学習データとテストデータに分割\n",
+    "# (from sklearn.model_selection import  train_test_splitをインポート)\n",
+    "# ※分割時のパラメータは次を指定 test_size=0.3 random_state=0\n",
+    "#print(ans[95]) #回答表示\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【96】学習の実行\n",
+    "# 学習データ(features、target)を用いランダムフォレストにて学習を実行\n",
+    "# (from sklearn.ensemble import RandomForestClassifierをインポート)\n",
+    "# ※パラメータは次を指定 n_estimators=100 random_state=0\n",
+    "#print(ans[96]) #回答表示\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【97】予測の実行\n",
+    "# test_Xデータの乗客の生存を予測\n",
+    "#print(ans[97]) #回答表示\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【98】予測精度の確認\n",
+    "# 予測結果がtest_y(生存有無の答え)とどれぐらい\n",
+    "# 整合していたかを確認(評価指標はaccuracy)\n",
+    "# (from sklearn.metrics import accuracy_scoreをインポート)\n",
+    "#print(ans[98]) #回答表示\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【99】重要度の確認\n",
+    "# 学習における各列(特徴量)の\n",
+    "# 重要度を表示\n",
+    "#print(ans[99]) #回答表示\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 【100】予測結果のcsv出力\n",
+    "# test_Xの予測結果をcsvでoutputフォルダに出力(ファイル名は「submission.csv」)\n",
+    "# (headerは不要)\n",
+    "#print(ans[100]) #回答表示\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# ノックお疲れ様でした\n",
+    "各セルのoutput表示をすべてクリアにしたい場合は、ツールバーの  \n",
+    "「Kernel」→「Restart & Clear Output」を実行して下さい。"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "0tuku",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.14.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
