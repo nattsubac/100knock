@@ -21,6 +21,9 @@ credentials.json
 # Jupyter
 .ipynb_checkpoints/
 
+# External reference repositories
+materials/
+
 # Raw data and generated outputs
 data/raw/*
 !data/raw/.gitkeep
